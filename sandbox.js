@@ -1,3 +1,6 @@
+const LOCAL_URL = 'http://192.168.1.140:5000/predict';
+
+
 (function() {
   const params = new URLSearchParams(location.search);
   const url = params.get("url") || "";
@@ -6,6 +9,9 @@
   const goBtn = document.getElementById("goBtn");
   const openOriginal = document.getElementById("openOriginal");
   const note = document.getElementById("note");
+
+  
+
 
   function setUrl(u) {
     input.value = u;
@@ -82,6 +88,26 @@
 
   if (url) {
     setUrl(url);
+    fetch(LOCAL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: url })
+    }).then(response => response.json()).then(data => {
+      // Process the response
+      console.log('Phishing check result:', data);
+      
+      if (data.status === 'Safe') {
+        alert('✅ URL is safe');
+        openOriginalFallback(url);
+
+      } else {
+        alert('⚠️ Potential phishing detected Stay In Sandbox!');
+      }
+    }).catch(error => {
+      console.error('API error:', error);
+    }); 
     alert("Loading URL inside sandboxed iframe:\n" + url);
   } else {
     input.placeholder = "No URL provided";
