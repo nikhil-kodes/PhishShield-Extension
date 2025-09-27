@@ -15,13 +15,17 @@
     "<all_urls>"
   ],
   "action": {
-    "default_title": "PhishShield AI - Link Sandbox Opener"
+    "default_title": "PhishShield AI - Link Sandbox Opener",
+    "default_popup": "popup.html"
   },
   "omnibox": {
     "keyword": "sandbox"
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "logo128.png"
   },
   "content_scripts": [
     {

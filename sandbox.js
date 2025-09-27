@@ -98,6 +98,8 @@ const LOCAL_URL = 'http://192.168.1.140:5000/predict';
       // Process the response
       console.log('Phishing check result:', data);
       
+      chrome.runtime.sendMessage({ action: 'phishingResult', data: data });
+
       if (data.status === 'Safe') {
         alert('✅ URL is safe');
         openOriginalFallback(url);
