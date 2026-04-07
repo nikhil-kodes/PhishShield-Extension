@@ -4,104 +4,272 @@
 		<meta charset="UTF-8" />
 		<title>PhishShield AI</title>
 		<style>
-			/* Basic reset */
+			:root {
+				--background: #09090b;
+				--foreground: #fafafa;
+				--primary: #3b82f6;
+				--card: #141417;
+				--border: #27272a;
+				--muted: #71717a;
+				--success: #10b981;
+				--error: #ef4444;
+			}
+
 			* {
 				margin: 0;
 				padding: 0;
 				box-sizing: border-box;
-				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				font-family: 'Geist Sans', 'Inter', -apple-system, sans-serif;
 			}
 
 			body {
-				width: 300px;
-				min-height: 400px;
-				background: #fdfcff; /* White background */
-				color: #1a1a1a;
+				width: 320px;
+				min-height: 480px;
+				background: var(--background);
+				color: var(--foreground);
+				display: flex;
+				flex-direction: column;
+				padding: 0;
+				overflow: hidden;
+			}
+
+			/* Header */
+			.header {
+				padding: 16px;
+				background: rgba(20, 20, 23, 0.8);
+				backdrop-filter: blur(10px);
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.logo-container {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.logo-icon {
+				width: 20px;
+				height: 20px;
+				fill: var(--primary);
+			}
+
+			.logo-text {
+				font-weight: 900;
+				font-size: 11px;
+				letter-spacing: 0.15em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			/* Score Badge */
+			.score-container {
+				margin: 12px 16px;
+				padding: 10px;
+				background: rgba(16, 185, 129, 0.05);
+				border: 1px solid rgba(16, 185, 129, 0.1);
+				border-radius: 12px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.score-label {
+				font-size: 9px;
+				text-transform: uppercase;
+				font-weight: 800;
+				letter-spacing: 0.05em;
+				color: var(--muted);
+			}
+
+			.score-value {
+				font-size: 14px;
+				font-weight: 900;
+				color: var(--success);
+			}
+
+			/* Content Area */
+			.content {
+				flex: 1;
+				padding: 24px 20px;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				padding: 15px;
+				text-align: center;
 			}
 
-			/* Logo */
-			.logo {
-				width: 60px;
-				height: 60px;
-				margin-bottom: 15px;
-				background: url("logo.png") no-repeat center center;
-				background-size: contain;
+			.status-visual {
+				width: 80px;
+				height: 80px;
+				border-radius: 50%;
+				background: rgba(16, 185, 129, 0.1);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-bottom: 20px;
+				position: relative;
 			}
 
-			h2 {
+			.status-visual::before {
+				content: '';
+				position: absolute;
+				inset: -4px;
+				border-radius: 50%;
+				border: 1px solid var(--success);
+				opacity: 0.2;
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0% { transform: scale(1); opacity: 0.2; }
+				50% { transform: scale(1.1); opacity: 0.1; }
+				100% { transform: scale(1); opacity: 0.2; }
+			}
+
+			.status-icon {
+				width: 40px;
+				height: 40px;
+				fill: var(--success);
+			}
+
+			.status-title {
 				font-size: 20px;
-				color: #4a3fff; /* Light purple */
-				margin-bottom: 15px;
+				font-weight: 900;
+				letter-spacing: -0.02em;
+				margin-bottom: 8px;
 			}
 
-			.status-card {
+			.status-desc {
+				font-size: 11px;
+				color: var(--muted);
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				margin-bottom: 24px;
+			}
+
+			/* Data Card */
+			.data-card {
 				width: 100%;
-				padding: 15px;
-				border-radius: 10px;
-				border: 1px solid #d0d0ff;
-				background: #eef0ff; /* Light purple/blue card */
-				margin-bottom: 10px;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				padding: 12px;
+				text-align: left;
+				margin-bottom: 12px;
 			}
 
-			.status-card.safe {
-				border-color: #4caf50;
-				background: #e6f9e6;
+			.data-label {
+				font-size: 8px;
+				text-transform: uppercase;
+				font-weight: 800;
+				color: var(--muted);
+				margin-bottom: 4px;
 			}
 
-			.status-card.danger {
-				border-color: #f44336;
-				background: #ffe6e6;
+			.data-value {
+				font-size: 11px;
+				font-family: 'JetBrains Mono', monospace;
+				color: #e4e4e7;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
-			.status-card h3 {
-				font-size: 16px;
-				margin-bottom: 5px;
+			/* Buttons */
+			.actions {
+				width: 100%;
+				margin-top: auto;
+				padding: 20px;
+				background: var(--background);
+				border-top: 1px solid var(--border);
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
 			}
 
-			.status-card p {
-				font-size: 14px;
-				color: #333;
-			}
-
-			.url {
-				word-break: break-all;
-				font-size: 13px;
-				color: #555;
-				margin-top: 5px;
-			}
-
-			button {
-				background: #4a3fff; /* Light purple */
+			.btn-primary {
+				width: 100%;
+				height: 44px;
+				background: var(--primary);
 				color: white;
 				border: none;
-				padding: 10px 15px;
-				border-radius: 8px;
+				border-radius: 10px;
+				font-weight: 900;
+				text-transform: uppercase;
+				font-size: 11px;
+				letter-spacing: 0.05em;
 				cursor: pointer;
-				margin-top: 10px;
-				width: 100%;
-				font-size: 14px;
+				transition: all 0.2s;
 			}
 
-			button:hover {
-				background: #3b33cc;
+			.btn-primary:hover {
+				filter: brightness(1.1);
+				transform: translateY(-1px);
+			}
+
+			.btn-ghost {
+				width: 100%;
+				height: 32px;
+				background: transparent;
+				color: var(--muted);
+				border: none;
+				font-weight: 700;
+				text-transform: uppercase;
+				font-size: 9px;
+				cursor: pointer;
+			}
+
+			.btn-ghost:hover {
+				color: var(--foreground);
+			}
+
+			/* States */
+			.danger {
+				--primary: #ef4444;
+				--success: #ef4444;
+			}
+			.danger .status-visual {
+				background: rgba(239, 68, 68, 0.1);
+			}
+			.danger .score-container {
+				background: rgba(239, 68, 68, 0.05);
+				border-color: rgba(239, 68, 68, 0.1);
 			}
 		</style>
 	</head>
-	<body>
-		<div class="logo"></div>
-		<h2>PhishShield AI</h2>
-		<div id="statusContainer">
-			<div class="status-card safe">
-				<h3>Status:</h3>
-				<p>Reason:</p>
-				<p class="url"></p>
+	<body id="mainBody">
+		<div class="header">
+			<div class="logo-container">
+				<svg class="logo-icon" viewBox="0 0 24 24"><path d="M12 2L3 7v6a12 12 0 009 11 12 12 0 009-11V7l-9-5z"/></svg>
+				<span class="logo-text">PhishShield AI</span>
+			</div>
+			<svg id="settingsBtn" style="width:14px;height:14px;fill:#52525b;cursor:pointer" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22l-1.92 3.32c-.12.21-.07.47.12.61l2.03 1.58c-.04.3-.06.61-.06.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+		</div>
+
+		<div class="score-container" id="scoreDiv">
+			<span class="score-label">AI Trust Score</span>
+			<span class="score-value" id="scoreVal">--%</span>
+		</div>
+
+		<div class="content" id="contentArea">
+			<div class="status-visual">
+				<svg class="status-icon" viewBox="0 0 24 24" id="statusSvg"><path d="M12 2L3 7v6a12 12 0 009 11 12 12 0 009-11V7l-9-5z"/></svg>
+			</div>
+			<h2 class="status-title" id="statusTitle">Analysing...</h2>
+			<p class="status-desc" id="statusDesc">AI Agent Scanning Domain</p>
+
+			<div class="data-card">
+				<div class="data-label">Active Protected link</div>
+				<div class="data-value" id="urlVal">Waiting for URL...</div>
 			</div>
 		</div>
-		<button id="openOriginalBtn">Open Original URL</button>
+
+		<div class="actions">
+			<button class="btn-primary" id="openOriginalBtn">Re-Scan Asset</button>
+			<button class="btn-ghost" id="telemetryBtn">View Telemetry</button>
+		</div>
 		<script src="./popup.js"></script>
 	</body>
 </html>
